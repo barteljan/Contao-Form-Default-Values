@@ -1,0 +1,38 @@
+{
+   "name":"barteljan/contao-form-default-values",
+   "description":"A contao module to fill a form by insert tags or data from your databasentainer based on pimple for Contao open source cms.",
+   "keywords":[
+      "contao",
+      "form",
+      "default values"
+   ],
+   "type":"contao-module",
+   "homepage":"http://janbartel.de/",
+   "license":"BSD",
+   "authors":[
+      {
+         "name":"Jan Bartel",
+         "email":"barteljan@yahoo.de",
+         "homepage":"http://janbartel.de",
+         "role":"Developer"
+      }
+   ],
+   "support":{
+      "email":"barteljan@yahoo.de",
+      "issues":"https://github.com/barteljan/Contao-Form-Default-Values/issues",
+      "wiki":"https://github.com/barteljan/Contao-Form-Default-Values/wiki",
+      "source":"https://github.com/barteljan/Contao-Form-Default-Values"
+   },
+   "require":{
+      "php":">=5.3",
+      "contao/core":">=2.11,<3.4",
+      "contao-community-alliance/composer-installer": "*"
+   },
+   "extra":{
+      "contao":{
+         "sources":{
+            "FormDefaultValues":"system/modules/FormDefaultValues"
+         }
+      }
+   }
+}
