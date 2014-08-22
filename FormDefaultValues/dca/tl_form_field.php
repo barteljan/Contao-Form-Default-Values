@@ -30,6 +30,7 @@
  * @copyright Jan Bartel 2014
  */
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['text'] = str_replace('placeholder;','placeholder,defaultValue;',$GLOBALS['TL_DCA']['tl_form_field']['palettes']['text']);
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['select'] = str_replace('multiple;','multiple,defaultValue;',$GLOBALS['TL_DCA']['tl_form_field']['palettes']['select']);
 
 $GLOBALS['TL_DCA']['tl_form_field']['fields']['defaultValue'] = array
 (
