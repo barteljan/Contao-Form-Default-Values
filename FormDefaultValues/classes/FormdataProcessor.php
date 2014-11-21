@@ -58,8 +58,7 @@ class FormdataProcessor extends \Frontend{
          foreach($insertTags as $tag){
            $replacedTags[] = $this->replaceInsertTags($tag);
          }
-
-
+        
          $database = $this->getDatabase();
          $statement = $database->prepare($sql);
          $result = call_user_func_array ( array($statement,'execute') , $replacedTags);
