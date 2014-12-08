@@ -34,5 +34,8 @@
  */
 ClassLoader::addClasses(array
 (
-    'jba\form\defaultValues\FormdataProcessor'  => 'system/modules/FormDefaultValues/classes/FormdataProcessor.php'
+    'jba\form\defaultValues\FormdataProcessor'                   => 'system/modules/FormDefaultValues/classes/FormdataProcessor.php',
+    'jba\form\defaultValues\FormSaveAndUpdateBackendProcessor'   => 'system/modules/FormDefaultValues/classes/FormSaveAndUpdateBackendProcessor.php',
 ));
+
+

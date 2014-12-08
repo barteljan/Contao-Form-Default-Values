@@ -31,68 +31,111 @@
  */
 namespace jba\form\defaultValues;
 
-class FormdataProcessor extends \Frontend{
+class FormdataProcessor extends \Frontend
+{
 
-  private $_database;
-  protected $queryCache = array();
+    private $_database;
+    protected $queryCache = array();
 
-  public function loadFormField($objWidget,$pid,$options){
+    public function loadFormField($objWidget, $pid, $options)
+    {
+        //check if form should be filled by a database query
+        if ($options["formDefaultValuesLoadValuesFromDb"] == "1" &&
+            strlen($objWidget->value) == 0 &&
+            $options &&
+            is_array($options)
+        ) {
 
-    if(  strlen($objWidget->value)==0 &&
-         $options &&
-         is_array($options) &&
-         strlen($options['defaultValueSql'])>0){
+            $database = $this->getDatabase();
+            $result = null;
 
-         // fetch first data row from cache
-         // if cache isn't set fetch it from the database
-         $resultRow = null;
+            // load form values from a user-defined sql statement, if one is given
+            if (strlen($options['formDefaultValuesSql']) > 0) {
 
-         $sql = $options['defaultValueSql'];
+                // fetch first data row from cache
+                // if cache isn't set fetch it from the database
+                $resultRow = null;
 
-         $insertTags = array();
+                $sql = $options['formDefaultValuesSql'];
 
-         preg_match("#\{\{[^\)]*\}\}#",$sql,$insertTags);
-         $sql = preg_replace("#\{\{[^\)]*\}\}#"," ? ",$sql);
+                $insertTags = array();
 
-         $replacedTags = array();
-         foreach($insertTags as $tag){
-           $replacedTags[] = $this->replaceInsertTags($tag);
-         }
-        
-         $database = $this->getDatabase();
-         $statement = $database->prepare($sql);
-         $result = call_user_func_array ( array($statement,'execute') , $replacedTags);
+                preg_match("#\{\{[^\)]*\}\}#", $sql, $insertTags);
+                $sql = preg_replace("#\{\{[^\)]*\}\}#", " ? ", $sql);
 
-         if($result->count()>0){
-            $resultRow = $result->fetchAssoc();
-            $queryCache[$sql] = $resultRow;
-         }
+                $replacedTags = array();
+                foreach ($insertTags as $tag) {
+                    $replacedTags[] = $this->replaceInsertTags($tag);
+                }
 
-         //set default value if one is given by the data row
-         if(isset($resultRow[$objWidget->name])){
-           $objWidget->value = $resultRow[$objWidget->name];
-         }
+                $database = $this->getDatabase();
+                $statement = $database->prepare($sql);
+                $result = call_user_func_array(array($statement, 'execute'), $replacedTags);
+            } else if(!empty($objWidget->name)){
+
+                $tableName = isset($options['formDefaultValuesTable'])?$options['formDefaultValuesTable']:null;
+
+                $alias     = isset($options['formDefaultValuesAlias'])?$options['formDefaultValuesAlias']:null;
+
+                $value     = (  isset($options['formDefaultValuesGetParamName']) &&
+                                isset($_GET[$options['formDefaultValuesGetParamName']])) ?
+                                $_GET[$options['formDefaultValuesGetParamName']] :
+                                null;
+                $tables = $database->listTables();
+
+                $tableFields = array();
+                foreach($database->listFields($tableName) as $field){
+                    $tableFields[] = $field['name'];
+                }
+
+                //if all table and fields exist, and the value is not null then set form field value
+                if(!empty($tableName) && in_array($tableName,$tables)
+                    && !empty($alias) && in_array($alias,$tableFields)
+                    && in_array($objWidget->name,$tableFields)
+                    && !empty($value)){
+
+                    $sql = "SELECT ".$objWidget->name." FROM " . $tableName . " WHERE " . $alias . " LIKE ?";
+
+                    $result = $database->prepare($sql)->execute($value);
+                }
+            }
+
+
+            if ($result && $result->count() > 0) {
+                $resultRow = $result->fetchAssoc();
+                $queryCache[$sql] = $resultRow;
+            }
+
+            //set value if one is given by the data row
+            if ($resultRow && isset($resultRow[$objWidget->name])) {
+                $objWidget->value = $resultRow[$objWidget->name];
+            }
+
+
+        }
+
+        if (strlen($objWidget->value) == 0 &&
+            strlen($objWidget->defaultValue) > 0
+        ) {
+            $objWidget->value = $this->replaceInsertTags($objWidget->defaultValue);
+        }
+
+        return $objWidget;
     }
 
-    if(  strlen($objWidget->value)==0 &&
-         strlen($objWidget->defaultValue)>0 ){
-       $objWidget->value = $this->replaceInsertTags($objWidget->defaultValue);
+
+    public function getDatabase()
+    {
+        if ($this->_database == null) {
+            $this->_database = \Database::getInstance();
+        }
+
+        return $this->_database;
     }
 
-    return $objWidget;
-  }
-
-
-  public function getDatabase(){
-    if($_database == null){
-      $_database = \Database::getInstance();
+    public function setDatabase($database)
+    {
+        $this->_database = $database;
     }
-
-    return $_database;
-  }
-
-  public function setDatabase($database){
-    $_database = $database;
-  }
 
 }

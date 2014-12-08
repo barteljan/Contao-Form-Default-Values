@@ -29,5 +29,10 @@
  * @license   BSD
  * @copyright Jan Bartel 2014
  */
-$GLOBALS['TL_LANG']['tl_form']['defaultValueSql'] = array('SQL', 'Der Standart-Wert eines leeren Formular-Feldes wird durch den Inhalt der Spalte mit dem gleichen Namen dieser Abfrage ersetzt. Es wird dabei immer der erste Datensatz verwendet.');
-$GLOBALS['TL_LANG']['tl_form']['default_values_legend'] = 'Standart-Werte';
+$GLOBALS['TL_LANG']['tl_form']['default_values_legend']             = 'Standart-Werte';
+$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesLoadValuesFromDb'] = array('Felder aus der Datenbank bef&uuml;llen.', 'Sollen die Felder dieses Formulars aus der Datenbank bef&uuml;llt werden?');
+$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesTable']            = array("Zieltabelle","Tabelle aus der die Felder dieses Formulars bef&uuml;llt werden sollen.");
+$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesAlias']            = array("Id/Alias-Feld","Eindeutiges Feld mit dem die entsprechende Zeile bestimmt wird.");
+$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesGetParamName']     =  array('GET-Parameter zum Ausw&auml;hlen des Datensatzes', 'GET-Parameter der den Wert der Aliasspalte bestimmt mit der die Formularfelder bef&uuml;llt werden sollen.');
+$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesSql']              =  array('SQL', 'Der Standart-Wert eines leeren Formular-Feldes wird durch den Inhalt der Spalte mit dem gleichen Namen dieser Abfrage ersetzt. Es wird dabei immer der erste Datensatz verwendet. Achtung wenn Sie dieses Feld ausf&uuml;llen werden die oben angegebenen Felder zur Konfiguration des Lademechanismuses aus der Datenbank nicht beachtet!');
+

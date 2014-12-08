@@ -29,14 +29,58 @@
  * @license   BSD
  * @copyright Jan Bartel 2014
  */
-$GLOBALS['TL_DCA']['tl_form']['palettes']['default'] = str_replace('{config_legend}','{default_values_legend},defaultValueSql;{config_legend}',$GLOBALS['TL_DCA']['tl_form']['palettes']['default']);
+$GLOBALS['TL_DCA']['tl_form']['palettes']['__selector__'][] = 'formDefaultValuesLoadValuesFromDb';
+$GLOBALS['TL_DCA']['tl_form']['palettes']['default'] = str_replace('{config_legend}','{default_values_legend},formDefaultValuesLoadValuesFromDb;{config_legend}',$GLOBALS['TL_DCA']['tl_form']['palettes']['default']);
+$GLOBALS['TL_DCA']['tl_form']['subpalettes']['formDefaultValuesLoadValuesFromDb'] = 'formDefaultValuesTable,formDefaultValuesAlias,formDefaultValuesGetParamName,formDefaultValuesSql';
 
-$GLOBALS['TL_DCA']['tl_form']['fields']['defaultValueSql'] = array
+$GLOBALS['TL_DCA']['tl_form']['fields']['formDefaultValuesLoadValuesFromDb'] = array(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesLoadValuesFromDb'],
+    'exclude'                 => true,
+    'filter'                  => true,
+    'inputType'               => 'checkbox',
+    'eval'                    => array('submitOnChange'=>true,'tl_class'=>'long'),
+    'sql'                     => "char(1) NOT NULL default ''"
+);
+
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['formDefaultValuesTable'] = array
 (
-  'label'                   => &$GLOBALS['TL_LANG']['tl_form']['defaultValueSql'],
-  'exclude'                 => true,
-  'filter'                  => false,
-  'inputType'               => 'textarea',
-  'eval'                    => array('mandatory'=>false, 'rows'=>15, 'allowHTML'=>true, 'tl_class' => 'clr'),
-  'sql'                     => "text NULL"
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesTable'],
+    'exclude'                 => true,
+    'search'                  => true,
+    'inputType'               => 'select',
+    'options_callback'        => array('tl_form', 'getAllTables'),
+    'eval'                    => array('submitOnChange'=>true,'chosen'=>true,'tl_class'=>'w50'),
+    'sql'                     => "varchar(64) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['formDefaultValuesAlias'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesAlias'],
+    'exclude'                 => true,
+    'search'                  => true,
+    'inputType'               => 'select',
+    'options_callback'        => array('jba\form\defaultValues\FormBackendProcessor', 'getAllFields'),
+    'eval'                    => array('chosen'=>true,'tl_class'=>'w50'),
+    'sql'                     => "varchar(64) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['formDefaultValuesGetParamName'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesGetParamName'],
+    'exclude'                 => true,
+    'inputType'               => 'text',
+    'eval'                    => array('mandatory'=>false,'tl_class'=>'clr long'),
+    'sql'                     => "varchar(64) NOT NULL default 'id'"
+);
+
+
+$GLOBALS['TL_DCA']['tl_form']['fields']['formDefaultValuesSql'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form']['formDefaultValuesSql'],
+    'exclude'                 => true,
+    'filter'                  => false,
+    'inputType'               => 'textarea',
+    'eval'                    => array('mandatory'=>false, 'rows'=>15, 'allowHTML'=>true, 'tl_class' => 'clr'),
+    'sql'                     => "text NULL"
 );
